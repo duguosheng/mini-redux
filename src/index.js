@@ -2,11 +2,13 @@ import React from "react";
 import * as ReactDOM from "react-dom";
 import NoteAppContainer from "./containers";
 import {reducer} from "./reducer";
-import {createStore} from "./miniredux";
+import {Provider, createStore} from "./miniredux";
 
 const store = createStore(reducer);
 
 ReactDOM.render(
-    <NoteAppContainer store={store}/>,
+    <Provider store={store}>
+        <NoteAppContainer/>
+    </Provider>,
     document.getElementById('root')
 );

@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React from "react";
 import PropTypes from 'prop-types';
 
 /*******   store   ********/
@@ -47,7 +47,7 @@ export const createStore = (reducer) => {
 };
 
 /*******   Provider     ********/
-class Provider extends React.Component {
+export class Provider extends React.Component {
     // 在上下文中转换出store属性
     getChildContext() {
         return {
@@ -66,12 +66,13 @@ Provider.childContextTypes = {
 
 /*******     connect     ********/
 // 箭头函数的闭包
-const connect = (
+export const connect = (
     mapStateToProps = () => ({}),
     mapDispatchToProps = () => ({})
 ) => Component => {
     class Connected extends React.Component {
         onStoreOrPropsChange(props) {
+            // 解构赋值，上下文中的store将由Provider提供
             const {store} = this.context;
             const state = store.getState();
             const stateProps = mapStateToProps(state, props);
@@ -82,7 +83,7 @@ const connect = (
             });
         }
 
-        componentDidMount() {
+        componentWillMount() {
             const {store} = this.context;
             this.onStoreOrPropsChange(this.props);
             this.unsubscribe = store.subscribe(() =>
@@ -97,6 +98,7 @@ const connect = (
             this.unsubscribe();
         }
 
+        // 将所有的属性和组件绑定在一起
         render() {
             return <Component {...this.props} {...this.state}/>;
         }

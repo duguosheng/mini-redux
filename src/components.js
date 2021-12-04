@@ -61,8 +61,14 @@ const NoteApp = (
                     onCloseNote={onCloseNote}/> :
                 // 显示笔记列表
                 <div>
-                    <NoteList notes={notes} onOpenNote={onOpenNote}/>
-                    <button className="editor-button" onClick={onAddNote}>New Note</button>
+                    <NoteList
+                        notes={notes}
+                        onOpenNote={onOpenNote}/>
+                    <button
+                        className="editor-button"
+                        onClick={onAddNote}>
+                        New Note
+                    </button>
                 </div>
         }
     </div>
