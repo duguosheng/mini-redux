@@ -63,50 +63,6 @@ export const reducer = (state = initialState, action) => {
 }
 
 
-/*******   store   ********/
-const validateAction = action => {
-    if (!action || typeof action !== 'object' || Array.isArray(action)) {
-        throw new Error('Action must be an object!');
-    }
-
-    if (typeof action.type === 'undefined') {
-        throw new Error('Action must have a type!');
-    }
-};
-
-export const createStore = (reducer) => {
-    let state;              // 状态
-    const subscribers = []; // 订阅者列表
-    const store = {
-        // 执行动作
-        dispatch: action => {
-            validateAction(action);
-            state = reducer(state, action);
-            // 调用subscribers中所有的回调函数
-            subscribers.forEach(handler => handler());
-        },
-        // 获取状态
-        getState: () => state,
-
-        /**
-         * 订阅函数
-         * @param handler 指定的回调函数
-         * @returns {(function(): void)|*} 返回用于解除订阅的函数
-         */
-        subscribe: handler => {
-            subscribers.push(handler);
-            // 返回unsubscribe解除订阅函数
-            return () => {
-                const index = subscribers.indexOf(handler);
-                if (index > 0)
-                    subscribers.splice(index, 1);
-            };
-        }
-    };
-    // 返回一个包含几个函数的对象
-    store.dispatch({type: '@@redux/INIT'});
-    return store;
-};
 
 
 

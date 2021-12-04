@@ -69,16 +69,3 @@ const NoteApp = (
 )
 
 export default NoteApp;
-
-
-
-
-
-
-
-
-
-
-
-
-

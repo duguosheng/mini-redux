@@ -1,7 +1,8 @@
 import React from "react";
 import * as ReactDOM from "react-dom";
 import NoteAppContainer from "./containers";
-import {createStore, reducer} from "./reducer";
+import {reducer} from "./reducer";
+import {createStore} from "./miniredux";
 
 const store = createStore(reducer);
 
