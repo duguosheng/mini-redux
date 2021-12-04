@@ -1,17 +1,44 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import * as ReactDOM from "react-dom";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const initialState = {
+    nextNodeId: 1,
+    notes: {}
+}
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+window.state = initialState;
+
+// 添加笔记
+const onAddNote = () => {
+    const id = window.state.nextNodeId;
+    window.state.notes[id] = {
+        id,
+        content: ''
+    };
+    window.state.nextNodeId++;
+    renderApp();
+}
+
+const NoteApp = ({notes}) => (
+    <div>
+        {/*无序列表*/}
+        <ul className="note-list">
+            {
+                // 渲染每一个笔记条目
+                Object.keys(notes).map(id => (
+                    // 显然这里应该渲染比仅仅是id更有趣的事情
+                    <li className="note-list-item" key={id}>{id}</li>
+                ))
+            }
+        </ul>
+        <button className="editor-button" onClick={onAddNote}>New note</button>
+    </div>
+)
+
+const renderApp = () => {
+    ReactDOM.render(
+        <NoteApp notes={window.state.notes}/>,
+        document.getElementById('root')
+    );
+};
+
+renderApp();
