@@ -12,20 +12,23 @@ const validateAction = action => {
     }
 };
 
-export const createStore = (reducer) => {
+// middleware中间件实现异步操作
+export const createStore = (reducer, middleware) => {
     let state;              // 状态
     const subscribers = []; // 订阅者列表
+    const coreDispatch = action => {
+        validateAction(action);
+        state = reducer(state, action);
+        // 调用subscribers中所有的回调函数
+        subscribers.forEach(handler => handler());
+    };
+    const getState = () => state;
+
     const store = {
         // 执行动作
-        dispatch: action => {
-            validateAction(action);
-            state = reducer(state, action);
-            // 调用subscribers中所有的回调函数
-            subscribers.forEach(handler => handler());
-        },
+        dispatch: coreDispatch,
         // 获取状态
-        getState: () => state,
-
+        getState,
         /**
          * 订阅函数
          * @param handler 指定的回调函数
@@ -41,8 +44,20 @@ export const createStore = (reducer) => {
             };
         }
     };
+
+    // 如果传入了中间件，就修改store的dispatch
+    if (middleware) {
+        const dispatch = action => store.dispatch(action);
+        // 新的dispatch依靠中间件返回
+        // todo: 柯里化传参
+        store.dispatch = middleware({
+            dispatch,
+            getState,
+        })(coreDispatch);
+    }
+
     // 返回一个包含几个函数的对象
-    store.dispatch({type: '@@redux/INIT'});
+    coreDispatch({type: '@@redux/INIT'});
     return store;
 };
 
