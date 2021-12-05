@@ -4,26 +4,32 @@ export const OPEN_NOTE = 'OPEN_NOTE';
 export const CLOSE_NOTE = 'CLOSE_NOTE';
 
 export const initialState = {
-    nextNoteId: 1,
     openNoteId: null,
+    isLoading: false,
     notes: {},
 };
 
 const handlers = {
     [CREATE_NOTE]: (state, action) => {
-        const id = state.nextNoteId;
+        // 异步操作
+        if (!action.id) {
+            return {
+                ...state,
+                isLoading: true
+            };
+        }
         const newNote = {
-            id,
+            id: action.id,
             content: '',
         };
         // 带有新节点的state
         return {
             ...state,
-            nextNoteId: id + 1,
-            openNoteId: id,
+            isLoading: false,
+            openNoteId: action.id,
             notes: {
                 ...state.notes,
-                [id]: newNote,
+                [action.id]: newNote,
             }
         };
     },
@@ -47,7 +53,7 @@ const handlers = {
         ...state,
         openNoteId: action.id,
     }),
-    [CLOSE_NOTE]:(state, action)=>({
+    [CLOSE_NOTE]: (state) => ({
         ...state,
         openNoteId: null,
     }),

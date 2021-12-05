@@ -49,7 +49,6 @@ export const createStore = (reducer, middleware) => {
     if (middleware) {
         const dispatch = action => store.dispatch(action);
         // 新的dispatch依靠中间件返回
-        // todo: 柯里化传参
         store.dispatch = middleware({
             dispatch,
             getState,
@@ -74,9 +73,8 @@ export class Provider extends React.Component {
         return this.props.children;
     }
 }
-
 Provider.childContextTypes = {
-    store: PropTypes.object,
+    store: PropTypes.object
 };
 
 /*******     connect     ********/
